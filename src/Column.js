@@ -23,12 +23,16 @@ const TaskList = styled.div`
     isDraggingOver ? "lightblue" : "white"};
 `;
 
-const Column = ({ column, tasks }) => {
+const Column = ({ column, tasks, isDropDisabled }) => {
   return (
     <Container>
       <Title>{column.title}</Title>
 
-      <Droppable droppableId={column.id}>
+      <Droppable
+        droppableId={column.id}
+        // type={column.id === "column-3" ? "done" : "active"}
+        isDropDisabled={isDropDisabled}
+      >
         {(provided, snapshot) => (
           <TaskList
             ref={provided.innerRef}

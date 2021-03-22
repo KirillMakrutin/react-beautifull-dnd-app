@@ -11,10 +11,14 @@ const Container = styled.div`
 
 function App() {
   const [state, setState] = useState(initialData);
+  const [startColumnIndex, setStartColumnIndex] = useState(-1);
 
-  const handleDragStart = () => {
+  const handleDragStart = (start) => {
     document.body.style.color = "orange";
     document.body.style.transition = "background-color 0.2s ease";
+
+    const homeIndex = state.columnOrder.indexOf(start.source.droppableId);
+    setStartColumnIndex(homeIndex);
   };
 
   const handleDragUpdate = ({ destination }) => {
@@ -25,6 +29,8 @@ function App() {
   };
 
   const handleDragEnd = ({ destination, source, draggableId }) => {
+    setStartColumnIndex(-1);
+
     console.log(source, destination, draggableId);
 
     document.body.style.color = "inherit";
@@ -103,11 +109,19 @@ function App() {
       onDragUpdate={handleDragUpdate}
     >
       <Container>
-        {state.columnOrder.map((colId) => {
+        {state.columnOrder.map((colId, index) => {
           const column = state.columns[colId];
           const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
 
-          return <Column key={column.id} column={column} tasks={tasks} />;
+          return (
+            <Column
+              key={column.id}
+              column={column}
+              tasks={tasks}
+              // allow forward movement
+              isDropDisabled={startColumnIndex > index}
+            />
+          );
         })}
       </Container>
     </DragDropContext>
