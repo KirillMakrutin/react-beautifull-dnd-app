@@ -7,8 +7,22 @@ import { DragDropContext } from "react-beautiful-dnd";
 function App() {
   const [state, setState] = useState(initialData);
 
+  const handleDragStart = () => {
+    document.body.style.color = "orange";
+    document.body.style.transition = "background-color 0.2s ease";
+  };
+
+  const handleDragUpdate = ({ destination }) => {
+    const opacity = destination
+      ? destination.index / Object.keys(state.tasks).length
+      : 0;
+    document.body.style.backgroundColor = `rgba(153, 141, 217, ${opacity})`;
+  };
+
   const handleDragEnd = ({ destination, source, draggableId }) => {
     console.log(source, destination, draggableId);
+
+    document.body.style.color = "inherit";
 
     if (!destination) {
       return;
@@ -27,10 +41,10 @@ function App() {
     console.log("Before", newTaskIds);
 
     newTaskIds.splice(source.index, 1);
-    console.log( "After remove at source index", newTaskIds);
+    console.log("After remove at source index", newTaskIds);
 
     newTaskIds.splice(destination.index, 0, draggableId);
-    console.log( "After adding elememnt at destination index", newTaskIds);
+    console.log("After adding elememnt at destination index", newTaskIds);
 
     const newColumn = {
       ...column,
@@ -49,7 +63,11 @@ function App() {
   };
 
   return (
-    <DragDropContext onDragEnd={handleDragEnd}>
+    <DragDropContext
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      onDragUpdate={handleDragUpdate}
+    >
       {state.columnOrder.map((colId) => {
         const column = state.columns[colId];
         const tasks = column.taskIds.map((taskId) => state.tasks[taskId]);
