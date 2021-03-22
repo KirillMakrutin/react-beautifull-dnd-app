@@ -6,12 +6,19 @@ const Container = styled.div`
   margin: 8px;
   border: 1px solid lightgrey;
   border-radius: 2px;
+  flex-grow: 1;
+  flex-basis: 0;
+
+  display: flex;
+  flex-direction: column;
 `;
 const Title = styled.h3`
   padding: 8px;
 `;
 const TaskList = styled.div`
   padding: 8px;
+  flex-grow: 1;
+  min-height: 100px;
   background-color: ${({ isDraggingOver }) =>
     isDraggingOver ? "lightblue" : "white"};
 `;
